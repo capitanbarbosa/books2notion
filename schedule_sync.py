@@ -3,7 +3,8 @@ import books2notion
 import time
 import os
 
-schedule.every(60).minutes.do(books2notion.main)
+# Change the interval from 60 minutes to 2 minutes
+schedule.every(2).minutes.do(books2notion.main)
 
 if "API_TOKEN" in os.environ:
     while True:
