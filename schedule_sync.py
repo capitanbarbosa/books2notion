@@ -5,7 +5,7 @@ import os
 
 # Change the interval from 60 minutes to 2 minutes
 schedule.every(2).minutes.do(books2notion.main)
-
+#  2 min
 if "API_TOKEN" in os.environ:
     while True:
         schedule.run_pending()
