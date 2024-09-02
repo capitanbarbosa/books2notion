@@ -13,11 +13,36 @@ class document:
         self.json = docs.documents().get(documentId=id).execute()
         self.title = self.json["title"][12:-1]
         logger.info(f"Parsing {self.title}({self.id}) started")
-        self.author = self.json["body"]["content"][2]["table"]["tableRows"][0]["tableCells"][1]["content"][1]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
-        self.publisher = self.json["body"]["content"][2]["table"]["tableRows"][0]["tableCells"][1]["content"][2]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
-        self.highlight_count = self.json["body"]["content"][7]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
-        self.created_by = self.json["body"]["content"][8]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
-        self.last_sync = self.json["body"]["content"][8]["paragraph"]["elements"][2]["textRun"]["content"][0:-1]
+
+        try:
+            self.author = self.json["body"]["content"][2]["table"]["tableRows"][0]["tableCells"][1]["content"][1]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error parsing author: {e}")
+            self.author = None
+
+        try:
+            self.publisher = self.json["body"]["content"][2]["table"]["tableRows"][0]["tableCells"][1]["content"][2]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error parsing publisher: {e}")
+            self.publisher = None
+
+        try:
+            self.highlight_count = self.json["body"]["content"][7]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error parsing highlight count: {e}")
+            self.highlight_count = None
+
+        try:
+            self.created_by = self.json["body"]["content"][8]["paragraph"]["elements"][0]["textRun"]["content"][0:-1]
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error parsing created by: {e}")
+            self.created_by = None
+
+        try:
+            self.last_sync = self.json["body"]["content"][8]["paragraph"]["elements"][2]["textRun"]["content"][0:-1]
+        except (IndexError, KeyError) as e:
+            logger.error(f"Error parsing last sync: {e}")
+            self.last_sync = None
 
         # Contents
         self.chapters = []
